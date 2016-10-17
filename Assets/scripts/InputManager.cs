@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class InputManager : MonoBehaviour {
 
 	Dictionary<string, KeyCode> buttonKeys;
 
-	private void Start () {
+	private void OnEnable () {
 		buttonKeys = new Dictionary<string, KeyCode> ();
 
 		// TODO - Read from user prefs file
@@ -20,6 +21,19 @@ public class InputManager : MonoBehaviour {
 		} else {
 			Debug.LogError ("InputManager::GetButtonDown -- No button named " + buttonName);
 			return false;
+		}
+	}
+
+	public string[] GetButtonNames() {
+		return buttonKeys.Keys.ToArray ();
+	}
+
+	public string GetKeyNameForButton (string buttonName) {
+		if (buttonKeys.ContainsKey (buttonName)) {
+			return buttonKeys [buttonName].ToString ();
+		} else {
+			Debug.LogError ("InputManager::GetKeyNameForButton -- No button named " + buttonName);
+			return "N/A";
 		}
 	}
 }
