@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	private Rigidbody2D rb;
+	private InputManager inputManager;
 
 	private bool doJump = false;
 	[SerializeField]
@@ -11,10 +12,11 @@ public class PlayerController : MonoBehaviour {
 
 	private void Start () {
 		rb = GetComponent<Rigidbody2D> ();
+		inputManager = GameObject.FindObjectOfType<InputManager> ();
 	}
 
 	private void Update () {
-		if (Input.GetButtonDown ("Jump")) {
+		if (inputManager.GetButtonDown ("Jump")) {
 			doJump = true;
 		}
 	}
