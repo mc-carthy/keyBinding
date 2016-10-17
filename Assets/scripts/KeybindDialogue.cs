@@ -14,7 +14,10 @@ public class KeybindDialogue : MonoBehaviour {
 		inputManager = GameObject.FindObjectOfType<InputManager> ();
 		string[] buttonNames = inputManager.GetButtonNames ();
 
-		foreach (string bn in buttonNames) {
+		for (int i = 0; i < buttonNames.Length; i++) {
+			string bn;
+			bn = buttonNames [i];
+
 			GameObject go = (GameObject)Instantiate (keyItemPrefab);
 			go.transform.SetParent (keyList.transform);
 			go.transform.localScale = Vector3.one;
@@ -24,6 +27,13 @@ public class KeybindDialogue : MonoBehaviour {
 
 			Text keyNameText = go.transform.Find ("keyNameButton/keyName").GetComponent<Text> ();
 			keyNameText.text = inputManager.GetKeyNameForButton (bn);
+
+			Button keybindButton = go.transform.Find ("keyNameButton").GetComponent<Button> ();
+			keybindButton.onClick.AddListener ( () => { StartRebindFor(bn); } );
 		}
+	}
+
+	private void StartRebindFor(string buttonName) {
+		Debug.Log ("Start rebind for: " + buttonName);
 	}
 }
