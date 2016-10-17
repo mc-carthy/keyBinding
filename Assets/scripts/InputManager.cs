@@ -36,4 +36,8 @@ public class InputManager : MonoBehaviour {
 			return "N/A";
 		}
 	}
+
+	public void SetButtonForKey (string buttonName, KeyCode keyCode) {
+		buttonKeys [buttonName] = keyCode;
+	}
 }

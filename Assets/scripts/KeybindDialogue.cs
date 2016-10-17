@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System;
+using System.Collections.Generic;
+
 
 public class KeybindDialogue : MonoBehaviour {
 
@@ -9,10 +11,13 @@ public class KeybindDialogue : MonoBehaviour {
 	private GameObject keyItemPrefab;
 	[SerializeField]
 	private GameObject keyList;
+	private string buttonToRebind = null;
+	private Dictionary<string, Text> buttonToLabel;
 
 	private void Start () {
 		inputManager = GameObject.FindObjectOfType<InputManager> ();
 		string[] buttonNames = inputManager.GetButtonNames ();
+		buttonToLabel = new Dictionary<string, Text> ();
 
 		for (int i = 0; i < buttonNames.Length; i++) {
 			string bn;
@@ -27,13 +32,30 @@ public class KeybindDialogue : MonoBehaviour {
 
 			Text keyNameText = go.transform.Find ("keyNameButton/keyName").GetComponent<Text> ();
 			keyNameText.text = inputManager.GetKeyNameForButton (bn);
+			buttonToLabel [bn] = keyNameText;
+
 
 			Button keybindButton = go.transform.Find ("keyNameButton").GetComponent<Button> ();
 			keybindButton.onClick.AddListener ( () => { StartRebindFor(bn); } );
 		}
 	}
 
+	private void Update () {
+		if (buttonToRebind != null) {
+			if (Input.anyKeyDown) {
+				foreach (KeyCode kc in Enum.GetValues (typeof(KeyCode))) {
+					if (Input.GetKeyDown (kc)) {
+						inputManager.SetButtonForKey (buttonToRebind, kc);
+						buttonToLabel [buttonToRebind].text = kc.ToString ();
+						buttonToRebind = null;
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	private void StartRebindFor(string buttonName) {
-		Debug.Log ("Start rebind for: " + buttonName);
+		buttonToRebind = buttonName;
 	}
 }
